@@ -17,7 +17,7 @@ public class UserService {
     public void processOAuthPostLogin(String username) {
         Optional<User> existUser = repo.findUserByUsername(username);
 
-        if (existUser.isPresent()) {
+        if (existUser.isEmpty()) {
 
             User newUser = new User();
             newUser.setUsername(username);

@@ -41,30 +41,27 @@ public class SecurityConfig {
     private final CustomAuthorizationRequestResolver customAuthorizationRequestResolver;
     private final CustomStatelessAuthorizationRequestRepository customStatelessAuthorizationRequestRepository;
 
+
     @Bean
     SecurityFilterChain configure(HttpSecurity http) throws Exception {
              http
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers( "/", "/login","/oauth/**").permitAll();
+                    auth.requestMatchers( "/", "/login", "/login.html","/oauth/**").permitAll();
                     try {
                         auth.anyRequest().authenticated()
                                 .and()
-                                .formLogin().permitAll()
+                                    .formLogin()
+                                    .loginPage("/login").permitAll()
                                 .and()
-                                .oauth2Login()
-                                .loginPage("/login")
-                                .userInfoEndpoint()
-                                .userService(oauth2UserService)
+                                    .oauth2Login()
+                                    .loginPage("/login")
+                                    .userInfoEndpoint()
+                                    .userService(oauth2UserService)
                                 .and()
-                                .successHandler(new AuthenticationSuccessHandler() {
-
-                                    @Override
-                                    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-                                                                        Authentication authentication) throws IOException, ServletException {
-                                        CustomOAuth2User oauthUser = (CustomOAuth2User) authentication.getPrincipal();
-                                        userService.processOAuthPostLogin(oauthUser.getEmail());
-                                        response.sendRedirect("/list");
-                                    }
+                                .successHandler((request, response, authentication) -> {
+                                    CustomOAuth2User oauthUser = (CustomOAuth2User) authentication.getPrincipal();
+                                    userService.processOAuthPostLogin(oauthUser.getEmail());
+                                    response.sendRedirect("/list");
                                 });
                     } catch (Exception e) {
                         throw new RuntimeException(e);

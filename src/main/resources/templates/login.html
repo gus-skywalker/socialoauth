@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -61,7 +61,7 @@
 <body>
 <div class="container">
     <h1>Login</h1>
-    <form th:action="@{/login}" method="post">
+    <form action="#" th:action="@{/login}" method="post">
         <div>
             <input type="email" name="email" required class="form-control" placeholder="E-mail" />
         </div>
@@ -81,9 +81,9 @@
     <hr>
     <p>Or login with:</p>
     <div>
-        <a th:href="/@{/oauth2/authorization/google}" class="btn-primary">Google</a>
-        <a th:href="/@{/oauth2/authorization/github}" class="btn-primary">GitHub</a>
-        <a th:href="/@{/oauth2/authorization/oidc-client}" class="btn-primary">Oidc-Client</a>
+        <a th:href="@{/oauth2/authorization/google}" class="btn-primary">Google</a>
+        <a th:href="@{/oauth2/authorization/github}" class="btn-primary">GitHub</a>
+        <a th:href="@{/oauth2/authorization/oidc-client}" class="btn-primary">Oidc-Client</a>
     </div>
 </div>
 </body>

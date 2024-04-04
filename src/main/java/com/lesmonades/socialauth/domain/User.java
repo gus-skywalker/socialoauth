@@ -34,4 +34,5 @@ public class User {
     public void setProvider(Provider provider) {
         this.provider = provider;
     }
+
 }
