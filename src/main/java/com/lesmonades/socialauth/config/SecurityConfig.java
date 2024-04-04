@@ -19,7 +19,9 @@ import org.springframework.http.MediaType;
 
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -39,7 +41,6 @@ public class SecurityConfig {
     private final CustomAuthorizationRequestResolver customAuthorizationRequestResolver;
     private final CustomStatelessAuthorizationRequestRepository customStatelessAuthorizationRequestRepository;
 
-
     @Bean
     SecurityFilterChain configure(HttpSecurity http) throws Exception {
              http
@@ -50,22 +51,28 @@ public class SecurityConfig {
                                 .and()
                                     .oauth2Login()
                                     .loginPage("/login")
-                                    .userInfoEndpoint()
+                                     .userInfoEndpoint()
                                 .and()
                                 .successHandler((request, response, authentication) -> {
                                     OAuth2UserHandler oauthUser = (OAuth2UserHandler) authentication.getPrincipal();
+
                                     response.sendRedirect("/user/me");
                                 });
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
                 })
-                .formLogin(withDefaults());
+                .oauth2Login(withDefaults());
              return http.build();
     }
+
 //    @Bean
 //    @SneakyThrows
 //    SecurityFilterChain securityFilterChain(HttpSecurity http) {
+//
+//        http
+//                .authorizeHttpRequests(auth -> {
+//                    auth.requestMatchers("/login", "/login.html","/oauth/**").permitAll(); });
 //        http
 //                .authorizeHttpRequests(authorize -> {
 //                    authorize.anyRequest().permitAll();

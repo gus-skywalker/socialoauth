@@ -10,12 +10,12 @@ public class UserController {
 
     @GetMapping("/login")
     public String login() {
-        return "login.html";
+        return "login";
     }
 
     @GetMapping("/")
     public String home() {
-        return "Home - O escolhido foi você. Salame mingue. Sorvete colore.";
+        return "profile";
     }
 
     @GetMapping("/user/me")

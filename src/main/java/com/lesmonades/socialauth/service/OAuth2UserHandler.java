@@ -20,7 +20,7 @@ public final class OAuth2UserHandler implements Consumer<OAuth2User> {
 
     @Override
     public void accept(OAuth2User user) {
-        processOAuthPostLogin(user.getName());
+        this.processOAuthPostLogin(user.getName());
         log.info("Saving first-time user: name=" + user.getName() + ", claims=", user.getAttributes() + ", authorities=" + user.getAuthorities());
     }
 
