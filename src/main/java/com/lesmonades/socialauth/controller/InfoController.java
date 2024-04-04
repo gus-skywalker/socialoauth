@@ -11,13 +11,13 @@ import static com.lesmonades.socialauth.controller.OAuthController.SESSION_COOKI
 
 
 @RestController
-@RequestMapping("info")
+@RequestMapping("/info")
 public class InfoController {
 
     @GetMapping("")
     public Info getInfo(@CookieValue(name = SESSION_COOKIE_NAME, required = false) String session) {
         return new Info()
-                .setApplication("tutorial-social-logins")
+                .setApplication("tutorial-social-login")
                 .setSession(session);
     }
 

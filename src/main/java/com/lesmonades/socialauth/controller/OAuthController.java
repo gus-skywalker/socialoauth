@@ -59,22 +59,22 @@ public class OAuthController {
         response.getWriter().write("{ \"redirectUrl\": \"%s\" }".formatted(url));
     }
 
-    @SneakyThrows
-    public void oauthSuccessCallback(OAuth2AuthorizedClient client, Authentication authentication) {
-        // You can grab the access + refresh tokens as well via the "client"
-        Map<String, Object> socialUserInfo = new HashMap<>();
-        if(client.getClientRegistration().getRegistrationId().equals("github")) {
-            socialUserInfo.putAll(((DefaultOAuth2User) authentication.getPrincipal()).getAttributes());
-        } else {
-            socialUserInfo.putAll(((DefaultOidcUser) authentication.getPrincipal()).getClaims()); // Other Social Logins
-        }
-        UUID accountId = this.accountService.findOrRegisterAccount(
-                authentication.getName(),
-                authentication.getName().split("\\|")[0],
-                socialUserInfo
-        );
-        AuthenticationHelper.attachAccountId(authentication, accountId.toString());
-    }
+//    @SneakyThrows
+//    public void oauthSuccessCallback(OAuth2AuthorizedClient client, Authentication authentication) {
+//        // You can grab the access + refresh tokens as well via the "client"
+//        Map<String, Object> socialUserInfo = new HashMap<>();
+//        if(client.getClientRegistration().getRegistrationId().equals("github")) {
+//            socialUserInfo.putAll(((DefaultOAuth2User) authentication.getPrincipal()).getAttributes());
+//        } else {
+//            socialUserInfo.putAll(((DefaultOidcUser) authentication.getPrincipal()).getClaims()); // Other Social Logins
+//        }
+//        UUID accountId = this.accountService.findOrRegisterAccount(
+//                authentication.getName(),
+//                authentication.getName().split("\\|")[0],
+//                socialUserInfo
+//        );
+//        AuthenticationHelper.attachAccountId(authentication, accountId.toString());
+//    }
 
     @SneakyThrows
     public void oauthSuccessResponse(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {

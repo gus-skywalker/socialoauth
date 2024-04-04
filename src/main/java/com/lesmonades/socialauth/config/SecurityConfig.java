@@ -1,9 +1,9 @@
 package com.lesmonades.socialauth.config;
 
 import com.lesmonades.socialauth.controller.OAuthController;
-import com.lesmonades.socialauth.config.oauth.CustomAuthorizationRedirectFilter;
+//import com.lesmonades.socialauth.config.oauth.CustomAuthorizationRedirectFilter;
 import com.lesmonades.socialauth.config.oauth.CustomAuthorizationRequestResolver;
-import com.lesmonades.socialauth.config.oauth.CustomAuthorizedClientService;
+//import com.lesmonades.socialauth.config.oauth.CustomAuthorizedClientService;
 import com.lesmonades.socialauth.config.oauth.CustomStatelessAuthorizationRequestRepository;
 import com.lesmonades.socialauth.service.OAuth2UserHandler;
 import jakarta.servlet.ServletException;
@@ -17,12 +17,15 @@ import org.springframework.context.annotation.Configuration;
 
 import org.springframework.http.MediaType;
 
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
+import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import java.io.IOException;
@@ -34,13 +37,18 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final OAuthController oauthController;
     private final OAuth2UserHandler oAuth2UserHandler;
-    private final CustomAuthorizedClientService customAuthorizedClientService;
-    private final CustomAuthorizationRedirectFilter customAuthorizationRedirectFilter;
-    private final CustomAuthorizationRequestResolver customAuthorizationRequestResolver;
-    private final CustomStatelessAuthorizationRequestRepository customStatelessAuthorizationRequestRepository;
+//    private final CustomAuthorizedClientService customAuthorizedClientService;
+//    private final CustomAuthorizationRedirectFilter customAuthorizationRedirectFilter;
+//    private final CustomAuthorizationRequestResolver customAuthorizationRequestResolver;
+//    private final CustomStatelessAuthorizationRequestRepository customStatelessAuthorizationRequestRepository;
 
+
+    SecurityFilterChain oauth2configure(HttpSecurity http) throws Exception {
+        OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
+        http.getConfigurer(OAuth2AuthorizationServerConfigurer.class).oidc(Customizer.withDefaults());
+        return http.build();
+    }
     @Bean
     SecurityFilterChain configure(HttpSecurity http) throws Exception {
              http
@@ -54,9 +62,9 @@ public class SecurityConfig {
                                      .userInfoEndpoint()
                                 .and()
                                 .successHandler((request, response, authentication) -> {
-                                    OAuth2UserHandler oauthUser = (OAuth2UserHandler) authentication.getPrincipal();
-
-                                    response.sendRedirect("/user/me");
+                                    OAuth2User oauthUser = (OAuth2User) authentication.getPrincipal();
+                                    oAuth2UserHandler.accept(oauthUser);
+                                    response.sendRedirect("/");
                                 });
                     } catch (Exception e) {
                         throw new RuntimeException(e);

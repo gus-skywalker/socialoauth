@@ -20,21 +20,21 @@ public class ClientController {
                 .build();
     }
 
-    @GetMapping("home")
-    public Mono<String> home(@RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient client,
-                             @AuthenticationPrincipal OidcUser oidcUser) {
-        return Mono.just("""
-        <h2> Access Token: %s </h2>
-        <h2> Refresh Token: %s </h2>
-        <h2> Id Token: %s </h2>
-        <h2> Claims: %s </h2>
-          """.formatted(client.getAccessToken().getTokenValue(),
-                client.getRefreshToken().getTokenValue(),
-                oidcUser.getIdToken().getTokenValue(),
-                oidcUser.getClaims()));
-    }
+//    @GetMapping("/home")
+//    public Mono<String> home(@RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient client,
+//                             @AuthenticationPrincipal OidcUser oidcUser) {
+//        return Mono.just("""
+//        <h2> Access Token: %s </h2>
+//        <h2> Refresh Token: %s </h2>
+//        <h2> Id Token: %s </h2>
+//        <h2> Claims: %s </h2>
+//          """.formatted(client.getAccessToken().getTokenValue(),
+//                client.getRefreshToken().getTokenValue(),
+//                oidcUser.getIdToken().getTokenValue(),
+//                oidcUser.getClaims()));
+//    }
 
-    @GetMapping("tasks")
+    @GetMapping("/tasks")
     public Mono<String> getTasks(
             @RegisteredOAuth2AuthorizedClient("1") OAuth2AuthorizedClient client) {
         return webClient
