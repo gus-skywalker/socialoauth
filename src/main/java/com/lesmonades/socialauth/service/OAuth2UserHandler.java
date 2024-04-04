@@ -6,12 +6,14 @@ import com.lesmonades.socialauth.repository.MongoDBUserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.function.Consumer;
 
 @Slf4j
 @RequiredArgsConstructor
+@Service
 public final class OAuth2UserHandler implements Consumer<OAuth2User> {
 
     private final MongoDBUserRepository userRepository;

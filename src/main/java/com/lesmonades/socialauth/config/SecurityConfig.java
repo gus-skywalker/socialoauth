@@ -5,8 +5,7 @@ import com.lesmonades.socialauth.config.oauth.CustomAuthorizationRedirectFilter;
 import com.lesmonades.socialauth.config.oauth.CustomAuthorizationRequestResolver;
 import com.lesmonades.socialauth.config.oauth.CustomAuthorizedClientService;
 import com.lesmonades.socialauth.config.oauth.CustomStatelessAuthorizationRequestRepository;
-import com.lesmonades.socialauth.service.CustomOauth2UserService;
-import com.lesmonades.socialauth.service.UserService;
+import com.lesmonades.socialauth.service.OAuth2UserHandler;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,9 +20,9 @@ import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import com.lesmonades.socialauth.domain.CustomOAuth2User;
 import java.io.IOException;
 
 import static org.springframework.security.config.Customizer.withDefaults;
@@ -34,8 +33,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SecurityConfig {
 
     private final OAuthController oauthController;
-    private final CustomOauth2UserService oauth2UserService;
-    private final UserService userService;
+    private final OAuth2UserHandler oAuth2UserHandler;
     private final CustomAuthorizedClientService customAuthorizedClientService;
     private final CustomAuthorizationRedirectFilter customAuthorizationRedirectFilter;
     private final CustomAuthorizationRequestResolver customAuthorizationRequestResolver;
@@ -50,18 +48,13 @@ public class SecurityConfig {
                     try {
                         auth.anyRequest().authenticated()
                                 .and()
-                                    .formLogin()
-                                    .loginPage("/login").permitAll()
-                                .and()
                                     .oauth2Login()
                                     .loginPage("/login")
                                     .userInfoEndpoint()
-                                    .userService(oauth2UserService)
                                 .and()
                                 .successHandler((request, response, authentication) -> {
-                                    CustomOAuth2User oauthUser = (CustomOAuth2User) authentication.getPrincipal();
-                                    userService.processOAuthPostLogin(oauthUser.getEmail());
-                                    response.sendRedirect("/list");
+                                    OAuth2UserHandler oauthUser = (OAuth2UserHandler) authentication.getPrincipal();
+                                    response.sendRedirect("/user/me");
                                 });
                     } catch (Exception e) {
                         throw new RuntimeException(e);
