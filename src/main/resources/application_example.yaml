@@ -1,0 +1,34 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: social login security
+  data:
+    mongodb:
+      uri: mongodb://root:root@localhost:27017/kitchen?authSource=admin&authMechanism=SCRAM-SHA-1
+
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            clientId: d35a8bf4be491ea6ade2
+            clientSecret:
+            redirect-uri: http://localhost:8082/callback.html
+            scope:
+              - email
+              - profile
+          google:
+            client-id: 780457839175-neegi3eqhqtuocldehbk3hlupoj2rv2i.apps.googleusercontent.com
+            client-secret:
+            scope:
+              - email
+              - profile
+
+logging:
+  level:
+    root: info
+    org.springframework.web: info
+    org.springframework.security: trace
+    org.springframework.security.oauth2: trace
