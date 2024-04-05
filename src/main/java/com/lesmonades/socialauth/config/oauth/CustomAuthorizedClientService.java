@@ -1,3 +1,4 @@
+/*
 package com.lesmonades.socialauth.config.oauth;
 
 import com.lesmonades.socialauth.controller.OAuthController;
@@ -27,4 +28,4 @@ public class CustomAuthorizedClientService implements OAuth2AuthorizedClientServ
     public void removeAuthorizedClient(String clientRegistrationId, String principalName) {
     }
 
-}
+}*/

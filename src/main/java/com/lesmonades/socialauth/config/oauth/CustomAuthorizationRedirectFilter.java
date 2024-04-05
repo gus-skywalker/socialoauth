@@ -1,3 +1,4 @@
+/*
 package com.lesmonades.socialauth.config.oauth;
 
 import com.lesmonades.socialauth.controller.OAuthController;
@@ -11,9 +12,11 @@ import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
 
+*/
 /**
  * https://github.com/spring-projects/spring-security/issues/6638#issuecomment-917376174
- */
+ *//*
+
 @Component
 public class CustomAuthorizationRedirectFilter extends OAuth2AuthorizationRequestRedirectFilter {
 
@@ -33,3 +36,4 @@ public class CustomAuthorizationRedirectFilter extends OAuth2AuthorizationReques
     }
 
 }
+*/
