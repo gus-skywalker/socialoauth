@@ -44,33 +44,31 @@ public class SecurityConfig {
 //    private final CustomStatelessAuthorizationRequestRepository customStatelessAuthorizationRequestRepository;
 
 
-    SecurityFilterChain oauth2configure(HttpSecurity http) throws Exception {
-        OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
-        http.getConfigurer(OAuth2AuthorizationServerConfigurer.class).oidc(Customizer.withDefaults());
-        return http.build();
-    }
+//    @Bean
+//    SecurityFilterChain oauth2configure(HttpSecurity http) throws Exception {
+//        OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
+//        http.getConfigurer(OAuth2AuthorizationServerConfigurer.class).oidc(Customizer.withDefaults());
+//        return http.build();
+//    }
     @Bean
     SecurityFilterChain configure(HttpSecurity http) throws Exception {
-             http
+        http
+                .csrf().disable()
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers( "/", "/login", "/login.html","/oauth/**").permitAll();
-                    try {
-                        auth.anyRequest().authenticated()
-                                .and()
-                                    .oauth2Login()
-                                    .loginPage("/login")
-                                     .userInfoEndpoint()
-                                .and()
-                                .successHandler((request, response, authentication) -> {
-                                    OAuth2User oauthUser = (OAuth2User) authentication.getPrincipal();
-                                    oAuth2UserHandler.accept(oauthUser);
-                                    response.sendRedirect("/");
-                                });
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
+                    auth
+                            .requestMatchers("/", "/login", "/login.html", "/oauth/**").permitAll()
+                            .anyRequest().authenticated();
                 })
-                .oauth2Login(withDefaults());
+                .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/login")
+                        .userInfoEndpoint()
+                        .and()
+                        .successHandler((request, response, authentication) -> {
+                            OAuth2User oauthUser = (OAuth2User) authentication.getPrincipal();
+                            oAuth2UserHandler.accept(oauthUser);
+                            response.sendRedirect("/");
+                        })
+                );
              return http.build();
     }
 
